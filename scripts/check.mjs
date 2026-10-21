@@ -15,10 +15,12 @@ for (const name of readdirSync(root)) {
   const pj = join(dir, "package.json")
   if (!existsSync(pj)) continue
   const pkg = JSON.parse(readFileSync(pj, "utf8"))
-  // gateway middleware and routings, agents and pages have no OpenCode
-  // plugin; their own tests check them
+  // gateway middleware, request hooks, routings, agents and pages have no
+  // OpenCode plugin; their own tests check them. A hook that also ships a
+  // provider entry is still loaded below.
   if (pkg.magpie?.middleware || pkg.magpie?.gateway || pkg.magpie?.agent) continue
   if (pkg.magpie?.page && !pkg.main && !pkg.exports) continue
+  if (pkg.magpie?.hooks && !pkg.main && !pkg.exports) continue
   const problems = []
   try {
     const mod = await import(pathToFileURL(join(dir, pkg.main ?? "index.mjs")).href)

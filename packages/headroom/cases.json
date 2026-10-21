@@ -1,0 +1,32 @@
+[
+  { "name": "off until an agent or a model is named",
+    "request": { "model": "claude-sonnet", "system": "You code.", "messages": [
+      { "role": "user", "content": "read the repository and summarize every file" },
+      { "role": "assistant", "content": "I read it." }] } },
+  { "name": "an agent that is not listed is left alone",
+    "ctx": { "agent": "codex", "model": "gpt-5" },
+    "options": { "agents": ["claude"], "url": "http://127.0.0.1:9" },
+    "request": { "model": "gpt-5", "messages": [{ "role": "user", "content": "a long tool result that would otherwise be compressed" }] } },
+  { "name": "a model outside the prefixes is left alone",
+    "ctx": { "agent": "claude", "model": "claude-sonnet" },
+    "options": { "models": ["gpt-"], "url": "http://127.0.0.1:9" },
+    "request": { "model": "claude-sonnet", "messages": [{ "role": "user", "content": "hello from claude" }] } },
+  { "name": "Gemini is not a Headroom protocol here",
+    "ctx": { "protocol": "gemini", "agent": "claude", "model": "gemini-2.5" },
+    "options": { "agents": ["claude"], "models": ["gemini"], "url": "http://127.0.0.1:9" },
+    "request": { "model": "gemini-2.5", "contents": [{ "role": "user", "parts": [{ "text": "a very long prompt" }] }] } },
+  { "name": "empty messages are not sent to Headroom",
+    "ctx": { "agent": "claude" },
+    "options": { "agents": ["claude"], "url": "http://127.0.0.1:9" },
+    "request": { "model": "claude-sonnet", "messages": [] } },
+  { "name": "a transcript whose last message is the cache breakpoint has no tail",
+    "ctx": { "agent": "claude" },
+    "options": { "agents": ["claude"], "protect_cache": true, "url": "http://127.0.0.1:9" },
+    "request": { "model": "claude-sonnet", "system": "You code.", "tools": [{ "name": "read" }], "messages": [
+      { "role": "user", "content": [{ "type": "text", "text": "earlier", "cache_control": { "type": "ephemeral" } }] },
+      { "role": "user", "content": [{ "type": "text", "text": "latest", "cache_control": { "type": "ephemeral" } }] }] } },
+  { "name": "both allowlists have to match",
+    "ctx": { "agent": "claude", "model": "claude-sonnet" },
+    "options": { "agents": ["codex"], "models": ["claude"], "url": "http://127.0.0.1:9" },
+    "request": { "model": "claude-sonnet", "messages": [{ "role": "user", "content": "hi" }] } }
+]

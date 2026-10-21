@@ -47,6 +47,7 @@ These packages aren't OpenCode plugins. magpie runs them in its gateway, on the 
 | [think-tags](packages/think-tags) | Take `<think>…</think>` out of a reply's text, or put a Chat reply's `reasoning_content` into it (`thinking_to_content`) |
 | [antigravity-cloak](packages/antigravity-cloak) | Claude Code and Claude Desktop on Antigravity: break the words Antigravity turns their system prompt away for, in what Antigravity alone is sent |
 | [codex-history](packages/codex-history) | Opt-in Responses history compatibility after switching providers: remove historical ciphertext and optional item IDs while preserving readable content and tool-call pairing |
+| [headroom](packages/headroom) | Compress Anthropic and OpenAI requests with a local Headroom before magpie routes them. An async Request hook, off until an agent or model allowlist is set; errors and timeouts leave the request unchanged |
 
 ```sh
 magpie plugin add @magpie-community/middleware-<name>
@@ -60,6 +61,8 @@ A middleware package is a folder under `packages/<name>/` with:
 - **`package.json`**: name `@magpie-community/middleware-<name>`, `"magpie": {"middleware": "./<name>.middleware.js", "options": {…}}`, no `main`. `options` is the example magpie offers when none are set.
 - **`<name>.middleware.js`**: exports `onRequest`, `onEvent` and/or `onResponse` ([the hooks](https://usemagpie.ai/docs/plugins#middleware)). It runs in magpie's gateway on moejs, so it is one file and imports nothing.
 - **`cases.json`** and a test that runs them with `check()` from `scripts/middleware.mjs`, which calls the hooks the way the gateway does.
+
+[headroom](packages/headroom) is the exception. It is a Request hook (`"hooks": "./headroom.hooks.js"`), still one file that imports nothing, because it has to wait on a local Headroom. Sync middleware cannot. Its cases are the requests that must not call Headroom; the calls themselves are tested with a mock.
 
 ### Routing strategies
 
