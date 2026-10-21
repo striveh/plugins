@@ -1,0 +1,22 @@
+{
+  "name": "@magpie-community/middleware-headroom",
+  "version": "0.1.0",
+  "description": "Compress Anthropic and OpenAI requests with a local Headroom before magpie routes them, as an async gateway Request hook. Off until an agent or model allowlist is set; errors and timeouts leave the request unchanged.",
+  "type": "module",
+  "files": ["headroom.hooks.js", "README.md"],
+  "keywords": ["magpie", "magpie-middleware", "headroom", "context-compression", "prompt-cache", "llm-gateway"],
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/magpie-community/plugins.git", "directory": "packages/headroom" },
+  "magpie": {
+    "hooks": "./headroom.hooks.js",
+    "options": {
+      "url": "http://127.0.0.1:8787",
+      "token": "",
+      "agents": [],
+      "models": [],
+      "timeout_ms": 1500,
+      "gatewayTimeoutMs": 2500,
+      "protect_cache": true
+    }
+  }
+}
